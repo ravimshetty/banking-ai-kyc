@@ -1,0 +1,21 @@
+{
+  // Terminal > Run Task... (or Ctrl+Shift+P "Tasks: Run Task"). "Setup: everything" runs steps 0-2 in order.
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "0. Start PostgreSQL (Docker)", "type": "shell", "command": "docker compose up -d --wait", "problemMatcher": [] },
+    { "label": "1. Generate data", "type": "shell", "command": "${command:python.interpreterPath}", "args": ["data/generate.py"], "problemMatcher": [] },
+    { "label": "2. Load database", "type": "shell", "command": "${command:python.interpreterPath}", "args": ["-m", "db.load"], "problemMatcher": [] },
+    {
+      "label": "Setup: everything", "dependsOrder": "sequence",
+      "dependsOn": ["0. Start PostgreSQL (Docker)", "1. Generate data", "2. Load database"],
+      "problemMatcher": []
+    },
+    { "label": "Demo", "type": "shell", "command": "${command:python.interpreterPath}", "args": ["demo.py"], "problemMatcher": [] },
+    { "label": "Tests", "type": "shell", "command": "${command:python.interpreterPath}", "args": ["-m", "pytest", "-v"],
+      "group": { "kind": "test", "isDefault": true }, "problemMatcher": [] },
+    { "label": "API server", "type": "shell", "command": "${command:python.interpreterPath}",
+      "args": ["-m", "uvicorn", "api:app", "--reload"], "isBackground": true, "problemMatcher": [] },
+    { "label": "Open psql shell", "type": "shell", "command": "docker compose exec postgres psql -U bank -d banking_ai", "problemMatcher": [] },
+    { "label": "Stop PostgreSQL", "type": "shell", "command": "docker compose down", "problemMatcher": [] }
+  ]
+}

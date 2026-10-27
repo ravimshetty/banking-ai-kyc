@@ -1,0 +1,14 @@
+{
+  // Pick the interpreter with Ctrl+Shift+P > "Python: Select Interpreter" (.venv on Windows; automatic in the Dev Container)
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.terminal.activateEnvironment": true,
+
+  // Test Explorer (beaker icon): runs pytest through python.exe, so Smart App Control never blocks pytest.exe
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests", "-v"],
+  "python.testing.cwd": "${workspaceFolder}",
+
+  "files.exclude": { "**/__pycache__": true, "**/.pytest_cache": true },
+  "[python]": { "editor.rulers": [120] }
+}

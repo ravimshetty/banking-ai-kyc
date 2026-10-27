@@ -1,0 +1,38 @@
+# PostgreSQL only (run Python on Windows):      docker compose up -d
+# Everything in Docker (no Python on Windows):  docker compose run --rm app python demo.py   (see TESTING.md)
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: bank
+      POSTGRES_PASSWORD: bank          # local development only; use a secret manager in production
+      POSTGRES_DB: banking_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bank -d banking_ai"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:                                 # Python 3.12 on Linux with all requirements installed
+    build: .
+    image: banking-ai-app
+    profiles: ["app"]                  # not started by a plain `docker compose up -d`
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://bank:bank@postgres:5432/banking_ai
+    volumes:
+      - .:/app                         # your VS Code edits are live inside the container
+      - /app/.venv                     # hide the Windows virtual environment from Linux
+    ports:
+      - "8000:8000"
+    working_dir: /app
+    command: ["sleep", "infinity"]     # kept alive for VS Code Dev Containers; `run` overrides it
+
+volumes:
+  pgdata:

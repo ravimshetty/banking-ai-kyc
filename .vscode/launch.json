@@ -1,0 +1,56 @@
+{
+  // Run and Debug panel (Ctrl+Shift+D): pick a configuration and press F5. Breakpoints work in all of them.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1. Generate synthetic data (CSV)",
+      "type": "debugpy", "request": "launch",
+      "program": "${workspaceFolder}/data/generate.py",
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal"
+    },
+    {
+      "name": "2. Load PostgreSQL (reset DB)",
+      "type": "debugpy", "request": "launch",
+      "module": "db.load",
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal"
+    },
+    {
+      "name": "3. Demo (all scenarios)",
+      "type": "debugpy", "request": "launch",
+      "program": "${workspaceFolder}/demo.py",
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal"
+    },
+    {
+      "name": "4. API server (debug) http://127.0.0.1:8000/docs",
+      "type": "debugpy", "request": "launch",
+      "module": "uvicorn",
+      "args": ["api:app", "--host", "127.0.0.1", "--port", "8000"],
+      "jinja": false,
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal"
+    },
+    {
+      "name": "5. Tests: all (pytest)",
+      "type": "debugpy", "request": "launch",
+      "module": "pytest",
+      "args": ["-v"],
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "6. Tests: only names matching... (prompt)",
+      "type": "debugpy", "request": "launch",
+      "module": "pytest",
+      "args": ["-v", "-k", "${input:testFilter}"],
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal"
+    },
+    {
+      "name": "Run current file",
+      "type": "debugpy", "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}", "envFile": "${workspaceFolder}/.env", "console": "integratedTerminal"
+    }
+  ],
+  "inputs": [
+    { "id": "testFilter", "type": "promptString", "description": "pytest -k expression, e.g. kyc or aml or rbac or maker_checker", "default": "kyc" }
+  ]
+}

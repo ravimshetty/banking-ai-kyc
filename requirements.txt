@@ -1,0 +1,9 @@
+numpy>=1.26
+pandas>=2.1
+fastapi>=0.110
+uvicorn>=0.29
+pydantic>=2.5
+pytest>=8.0
+python-dotenv>=1.0   # reads settings from .env
+psycopg[binary]>=3.1   # PostgreSQL driver (binary wheel bundles libpq, works on Windows)
+openai>=1.40      # optional: only used when OPENAI_API_KEY is set
